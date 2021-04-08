@@ -1,5 +1,5 @@
 import requests
-import ipaddress
+# import ipaddress
 from bs4 import BeautifulSoup
 from random import choice
 import sys
@@ -38,15 +38,15 @@ class ProxySession(requests.Session):
         else:
             raise TypeError('pass_ and pass_ should be a string')
     
-    def __get_proxy_server__(self, addr):
-        try:
-            broken_proxy_host = addr[::-1].split(':')
-            rev_port, rev_host = broken_proxy_host[0], broken_proxy_host[1:]
-            port = int(rev_port[::-1])
-            ip_addr = ipaddress.ip_address(':'.join(rev_host)[::-1])
-            return ip_addr, port
-        except ValueError as e:
-            return None
+    # def __get_proxy_server__(self, addr):
+    #     try:
+    #         broken_proxy_host = addr[::-1].split(':')
+    #         rev_port, rev_host = broken_proxy_host[0], broken_proxy_host[1:]
+    #         port = int(rev_port[::-1])
+    #         ip_addr = ipaddress.ip_address(':'.join(rev_host)[::-1])
+    #         return ip_addr, port
+    #     except ValueError as e:
+    #         return None
 
     def __collect_proxy_server_list__(self):
         headers = {
