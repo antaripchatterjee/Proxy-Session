@@ -1,7 +1,6 @@
 from setuptools import setup
 from proxy_session import __module__
 from proxy_session import __version__
-from os import environ
 
 
 def readme():
