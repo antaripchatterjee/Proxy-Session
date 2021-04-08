@@ -4,7 +4,7 @@
 
 ## Version
 
-The current version is `0.0.10`.
+The current version is `0.0.11`.
 
 ## Installation
 
@@ -111,4 +111,4 @@ Proxy URL: http://15.185.193.6:3128
 
 ## License
 
-Python module **Proxy-Session** comes with [MIT License](https://github.com/antaripchatterjee/Proxy-Session/blob/master/UNLICENSE).
+Python module **Proxy-Session** comes with [MIT License](https://github.com/antaripchatterjee/Proxy-Session/blob/master/LICENSE).
