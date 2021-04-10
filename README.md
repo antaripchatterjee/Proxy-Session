@@ -4,7 +4,7 @@
 
 ## Version
 
-The current version is `0.0.11`.
+The current version is `0.1.1`.
 
 ## Installation
 
@@ -35,6 +35,10 @@ This is a cross-platform python module, provided the version of the python inter
 ## API Reference
 
 ```python
+import requests
+...
+...
+
 class ProxySession(requests.Session):
     def __init__(self, user_=None, pass_=None, socks=False):
         '''
@@ -63,10 +67,11 @@ class ProxySession(requests.Session):
                 method
         
         @return -> It will always return the tuple of two element, response and proxy_url
-            On success, it will return the reponse object, returned by the method call and
-            the proxy url.
-            On Failure after maximum attempts, it will return a Response object, having
-            status_code -1 with empty content. The proxy url will be null in this case.
+                On success, it will return the reponse object, returned by the method call and
+                the proxy url. If the random proxy selection is made, it will return the proxy
+                url as a string, otherwise it will be same as keyword argument "proxies". 
+                On Failure after maximum attempts, it will return a Response object, having
+                status_code -1 with empty content. The proxy url will be null in this case.
         '''
         ...
         ...
@@ -74,39 +79,52 @@ class ProxySession(requests.Session):
     ...
 ```
 
->> Later a better reference manual will be provided.
+Find the full source code from [GitHub](https://github.com/antaripchatterjee/Proxy-Session/blob/master/proxy_session/session.py).
+
+If you need to make a request using `socks` proxy, make sure you install [PySocks](https://pypi.org/project/PySocks/). Alternatively just run the below command.
+
+```python
+pip install requests[socks]
+```
+
+If you pass keyword argument `proxies` to the `ProxySession.make_request` method(like `requests.request(...)`), it will prevent any random proxy selection.
+
+The random proxies are scrapped from [Free Proxy List - Just Checked Proxy List](https://free-proxy-list.net/). This module provides a reliable way to find a free and live proxy server, however, it does not evaluate any security of the proxy server, so it does not guarantee you about your personal and/or confidential data. It is always better to use a paid proxy, instead of a free proxy.
 
 ## Usage
 
 ```python
+from sys import stderr
 from proxy_session import ProxySession
 from proxy_session import ProxySessionTimeout
 
 if __name__ == '__main__':
     with ProxySession() as ps:
+        error_ = ps.error
+        if error_:
+            print('Error Status: ', error_[0], file=stderr)
+            print('Error:\n' + error_[1], file=stderr)
         response, proxy_addr = ps.make_request('https://httpbin.org/ip', timeout=ProxySessionTimeout.LONG_TIMEOUT, log=True)
         if response.status_code == 200:
             print(f'Response Content:\n{response.text}')
             print(f'Proxy URL: {proxy_addr}')
         else:
-            print("Some error occurred")
-            if response.status_code == -1:
-                print("Could not find any better proxy server")
-        
+            print(f'{response}')
+              
 ```
 
 The above code generated the below output, when I tested it.
 
 ```output
-Trying Proxy[https]: http://51.89.4.140:8118
-Trying Proxy[https]: http://118.140.151.98:3128
-Trying Proxy[https]: http://15.185.193.6:3128
+Trying random free proxy[https]: http://103.109.58.102:46523
+Trying random free proxy[https]: http://157.230.103.189:36366
+Trying random free proxy[https]: http://85.15.152.39:3128
 Response Content:
 {
-  "origin": "15.185.193.6"
+  "origin": "85.15.152.39"
 }
 
-Proxy URL: http://15.185.193.6:3128
+Proxy URL: http://85.15.152.39:3128
 ```
 
 ## License
